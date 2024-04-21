@@ -13,6 +13,7 @@
 # limitations under the License.
 
 ROOT_SHADERC_PATH := $(call my-dir)
+LOCAL_CFLAGS += -DANDROID -pipe -integrated-as -fno-plt -Ofast -flto -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce
 
 include $(ROOT_SHADERC_PATH)/third_party/Android.mk
 include $(ROOT_SHADERC_PATH)/libshaderc_util/Android.mk
