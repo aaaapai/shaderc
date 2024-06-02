@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: iOS build
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-11
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Build shaderc
+        run: |
+          # wget https://raw.githubusercontent.com/leetal/ios-cmake/master/ios.toolchain.cmake
+          ./utils/git-sync-deps
+          # -DCMAKE_TOOLCHAIN_FILE=$PWD/ios.toolchain.cmake
+          # Unable to set CMAKE_SYSTEM_NAME to iOS, doing live patch instead
+          sed -i'' -e 's/iOS/Darwin/g' third_party/spirv-tools/tools/CMakeLists.txt
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CROSSCOMPILING=true \
+            -DCMAKE_SYSTEM_NAME=Darwin \
+            -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_SYSROOT="$(xcrun --sdk iphoneos --show-sdk-path)" \
+            -DCMAKE_C_FLAGS="-arch arm64 -miphoneos-version-min=12.0" \
+            -DSHADERC_SKIP_EXAMPLES=ON \
+            -DSHADERC_SKIP_TESTS=ON
+          cmake --build build --config RelWithDebInfo -- -j8
+
+      - name: Upload libshaderc
+        uses: actions/upload-artifact@v2
+        with:
+          name: libshaderc
+          path: build/libshaderc/*.dylib
