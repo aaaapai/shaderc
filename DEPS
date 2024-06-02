@@ -6,12 +6,12 @@ vars = {
   'khronos_git': 'https://github.com/KhronosGroup',
 
   'abseil_revision': '5be22f98733c674d532598454ae729253bc53e82',
-  'effcee_revision' : '19b4aa87af25cb4ee779a071409732f34bfc305c',
-  'glslang_revision': '6be56e45e574b375d759b89dad35f780bbd4792f',
-  'googletest_revision': 'e47544ad31cb3ceecd04cc13e8fe556f8df9fe0b',
-  're2_revision': 'c9cba76063cf4235c1a15dd14a24a4ef8d623761',
-  'spirv_headers_revision': '4183b260f4cccae52a89efdfcdd43c4897989f42',
-  'spirv_tools_revision': '360d469b9eac54d6c6e20f609f9ec35e3a5380ad',
+  'effcee_revision' : 'aea1f4d62ca9ee2f44b5393e98e175e200a22e8e',
+  'glslang_revision': '2b19bf7e1bc0b60cf2fe9d33e5ba6b37dfc1cc83',
+  'googletest_revision': 'a7f443b80b105f940225332ed3c31f2790092f47',
+  're2_revision': 'b91097e3989a8c8b463c0b6d7ffe96dafa5d6fad',
+  'spirv_headers_revision': 'ff2afc3afc48dff4eec2a10f0212402a80708e38',
+  'spirv_tools_revision': '148c97f6876e427efd76d2328122c3075eab4b8f',
 }
 
 deps = {
