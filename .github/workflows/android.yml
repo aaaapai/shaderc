@@ -22,12 +22,12 @@ jobs:
         arch: [ "arm64-v8a", "armeabi-v7a", "x86", "x86_64" ]
       fail-fast: false
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Runs a set of commands using the runners shell
       - name: "Build shaderc for Android ${{matrix.arch}}"
@@ -35,7 +35,7 @@ jobs:
           ./utils/git-sync-deps
           # Workaround a cmake bug
           sed -i'' -e 's/android log/android -llog/g' third_party/spirv-tools/source/CMakeLists.txt
-          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DANDROID_PLATFORM=24 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
+          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DANDROID_PLATFORM=24 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
           cmake --build build --clean-first -- -j8
           cd build/libshaderc
           cp libshaderc_shared.so libshaderc.so
@@ -50,7 +50,7 @@ jobs:
           path: build/libshaderc/libshaderc.so
 
       - name: Upload libshaderc (with debug info)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: libshaderc-${{matrix.arch}}-debug
           path: build/libshaderc/libshaderc_shared.so
