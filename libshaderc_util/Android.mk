@@ -16,7 +16,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE:=shaderc_util
-LOCAL_CXXFLAGS:=-std=c++17 -fno-exceptions -fno-rtti -DENABLE_HLSL=1
+LOCAL_CXXFLAGS:=-O3 -fPIC -std=c++17 -fno-exceptions -fno-rtti -DENABLE_HLSL=1 -mllvm -polly -flto=auto
 LOCAL_EXPORT_C_INCLUDES:=$(LOCAL_PATH)/include
 LOCAL_SRC_FILES:=src/args.cc \
                 src/compiler.cc \
@@ -29,4 +29,4 @@ LOCAL_SRC_FILES:=src/args.cc \
 		src/version_profile.cc
 LOCAL_STATIC_LIBRARIES:=SPIRV SPIRV-Tools-opt
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/include
-include $(BUILD_STATIC_LIBRARY)
+include $(BUILD_SHARED_LIBRARY)
