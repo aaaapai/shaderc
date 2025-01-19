@@ -24,6 +24,10 @@ LOCAL_SRC_FILES:=src/shaderc.cc
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/include $(SPVHEADERS_LOCAL_PATH)/include
 LOCAL_STATIC_LIBRARIES:=shaderc_util SPIRV-Tools-opt
 LOCAL_CXXFLAGS:=-O3 -fPIC -std=c++17 -fno-exceptions -fno-rtti -DENABLE_HLSL=1 -flto=auto -mllvm -polly
+LOCAL_CFLAGS += -DANDROID -pipe -integrated-as -fno-plt -O3 -flto=thin -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce
+LOCAL_LDFLAGS += -flto=thin -Wl,-plugin-opt=-emulated-tls=0 -fuse-ld=lld
+LOCAL_CFLAGS += -O3 -fPIC -DPIC -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants
+LOCAL_CXXLAGS += -O3 -fPIC -DPIC -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants
 LOCAL_EXPORT_CPPFLAGS:=-std=c++17
 LOCAL_EXPORT_LDFLAGS:=-latomic
 include $(BUILD_SHARED_LIBRARY)
