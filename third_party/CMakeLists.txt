@@ -35,8 +35,7 @@ if(${SHADERC_ENABLE_TESTS})
 endif()
 
 set(OLD_PLATFORM_TOOLSET ${CMAKE_GENERATOR_TOOLSET})
-check_cxx_compiler_flag(-fPIC COMPILER_SUPPORTS_PIC)
-
+check_cxx_compiler_flag(-O3 -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants -fPIC COMPILER_SUPPORTS_PIC)
 
 if (IS_DIRECTORY ${SHADERC_SPIRV_HEADERS_DIR})
   set(SPIRV_HEADERS_SKIP_EXAMPLES ON)
