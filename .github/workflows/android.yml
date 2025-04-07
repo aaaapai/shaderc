@@ -33,8 +33,8 @@ jobs:
           ./utils/git-sync-deps
           # Workaround a cmake bug
           sed -i'' -e 's/android log/android -llog/g' third_party/spirv-tools/source/CMakeLists.txt
-          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DANDROID_PLATFORM=29 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
-          cmake --build build --clean-first -- -j8
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DANDROID_PLATFORM=29 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
+          cmake --build build --clean-first --config Release --parallel 4
           cd build/libshaderc
           cp libshaderc_shared.so libshaderc.so
           $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip libshaderc.so
