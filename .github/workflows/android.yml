@@ -25,7 +25,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
 
       # Runs a set of commands using the runners shell
       - name: "Build shaderc for Android ${{matrix.arch}}"
@@ -33,22 +33,22 @@ jobs:
           ./utils/git-sync-deps
           # Workaround a cmake bug
           sed -i'' -e 's/android log/android -llog/g' third_party/spirv-tools/source/CMakeLists.txt
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DANDROID_PLATFORM=29 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DANDROID_PLATFORM=29 -DPATHFINDER_TARGET=aarch64-linux-android -DCMAKE_AR=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar -DCMAKE_RANLIB=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib -DANDROID_TOOLCHAIN=clang -DANDROID_ARM_MODE=arm -DCMAKE_MAKE_PROGRAM=$ANDROID_NDK_LATEST_HOME/prebuilt/linux-x86_64/bin/make -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
           cmake --build build --clean-first --config Release --parallel 4
           cd build/libshaderc
           cp libshaderc_shared.so libshaderc.so
-          $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip libshaderc.so
+          $ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip libshaderc.so
           # | echo "Build exit code: $?"
           # --verbose
 
       - name: Upload libshaderc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
           name: libshaderc-${{matrix.arch}}
           path: build/libshaderc/libshaderc.so
 
       - name: Upload libshaderc (with debug info)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
           name: libshaderc-${{matrix.arch}}-debug
           path: build/libshaderc/libshaderc_shared.so
