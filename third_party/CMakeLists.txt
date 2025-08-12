@@ -35,8 +35,7 @@ if(${SHADERC_ENABLE_TESTS})
 endif()
 
 set(OLD_PLATFORM_TOOLSET ${CMAKE_GENERATOR_TOOLSET})
-check_cxx_compiler_flag(-fPIC COMPILER_SUPPORTS_PIC)
-
+check_cxx_compiler_flag(-O3 -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants -fPIC COMPILER_SUPPORTS_PIC)
 
 if (IS_DIRECTORY ${SHADERC_SPIRV_HEADERS_DIR})
   set(SPIRV_HEADERS_SKIP_EXAMPLES ON)
@@ -87,7 +86,11 @@ if (NOT TARGET glslang)
       # Glslang tests are off by default. Turn them on if testing Shaderc.
       set(GLSLANG_TESTS ON)
     endif()
-    set(GLSLANG_ENABLE_INSTALL $<NOT:${SKIP_GLSLANG_INSTALL}>)
+    if (SKIP_GLSLANG_INSTALL)
+      set(GLSLANG_ENABLE_INSTALL OFF)
+    else()
+      set(GLSLANG_ENABLE_INSTALL ON)
+    endif()
     add_subdirectory(${SHADERC_GLSLANG_DIR} glslang)
   endif()
   if (NOT TARGET glslang)

@@ -1,0 +1,54 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Android build
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    strategy:
+      matrix:
+        arch: [ "arm64-v8a"]
+      fail-fast: false
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@main
+
+      # Runs a set of commands using the runners shell
+      - name: "Build shaderc for Android ${{matrix.arch}}"
+        run: |
+          ./utils/git-sync-deps
+          # Workaround a cmake bug
+          sed -i'' -e 's/android log/android -llog/g' third_party/spirv-tools/source/CMakeLists.txt
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DANDROID_PLATFORM=29 -DPATHFINDER_TARGET=aarch64-linux-android -DCMAKE_AR=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar -DCMAKE_RANLIB=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib -DANDROID_TOOLCHAIN=clang -DANDROID_ARM_MODE=arm -DCMAKE_MAKE_PROGRAM=$ANDROID_NDK_LATEST_HOME/prebuilt/linux-x86_64/bin/make -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
+          cmake --build build --clean-first --config Release --parallel 4
+          cd build/libshaderc
+          cp libshaderc_shared.so libshaderc.so
+          $ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip libshaderc.so
+          # | echo "Build exit code: $?"
+          # --verbose
+
+      - name: Upload libshaderc
+        uses: actions/upload-artifact@main
+        with:
+          name: libshaderc-${{matrix.arch}}
+          path: build/libshaderc/libshaderc.so
+
+      - name: Upload libshaderc (with debug info)
+        uses: actions/upload-artifact@main
+        with:
+          name: libshaderc-${{matrix.arch}}-debug
+          path: build/libshaderc/libshaderc_shared.so
