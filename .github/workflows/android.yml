@@ -38,7 +38,6 @@ jobs:
           cd build/libshaderc
           cp libshaderc_shared.so libshaderc.so
           $ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip libshaderc.so
-          $ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip --strip-debug libshaderc_combined.a
           # | echo "Build exit code: $?"
           # --verbose
 
@@ -52,7 +51,8 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: libshaderc-${{matrix.arch}}
-          path: build/libshaderc/libshaderc_combined.a
+          path: |
+                **/libshaderc_combined.a
 
       - name: Upload libshaderc (with debug info)
         uses: actions/upload-artifact@main
