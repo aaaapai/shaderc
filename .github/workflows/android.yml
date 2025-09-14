@@ -50,7 +50,7 @@ jobs:
       - name: Upload libshaderc-static
         uses: actions/upload-artifact@main
         with:
-          name: libshaderc-${{matrix.arch}}
+          name: libshaderc-static-${{matrix.arch}}
           path: |
                 **/libshaderc_combined.a
 
