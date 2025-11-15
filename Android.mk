@@ -13,6 +13,10 @@
 # limitations under the License.
 
 ROOT_SHADERC_PATH := $(call my-dir)
+LOCAL_CFLAGS += -DANDROID -pipe -integrated-as -fno-plt -O3 -flto=thin -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce
+LOCAL_LDFLAGS += -flto=thin -Wl,-plugin-opt=-emulated-tls=0 -fuse-ld=lld
+LOCAL_CFLAGS += -O3 -fPIC -DPIC -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants
+LOCAL_CXXLAGS += -O3 -fPIC -DPIC -flto=thin -fwhole-program-vtables -mllvm -polly -pthread -Wall -fno-emulated-tls -march=armv8-a+simd+crc+crypto+fp16 -mcpu=cortex-a76 -fdata-sections -ffunction-sections -fmerge-all-constants
 
 include $(ROOT_SHADERC_PATH)/third_party/Android.mk
 include $(ROOT_SHADERC_PATH)/libshaderc_util/Android.mk
