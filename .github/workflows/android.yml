@@ -33,13 +33,13 @@ jobs:
       - name: "Build shaderc for Android ${{matrix.arch}}"
         run: |
           pushd ..
-          export ANDROID_NDK_HOME=${{env.ANDROID_NDK_LATEST_HOME}}
+          export ANDROID_NDK_HOME=${ANDROID_NDK_LATEST_HOME}
           popd
           
           ./utils/git-sync-deps
           # Workaround a cmake bug
           sed -i'' -e 's/android log/android -llog/g' third_party/spirv-tools/source/CMakeLists.txt
-          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DANDROID_PLATFORM=26 -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
+          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DANDROID_PLATFORM=26 -DANDROID_STL=c++_shared -DANDROID_ABI=${{matrix.arch}} -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DSHADERC_SKIP_TESTS=1
           cmake --build build --clean-first -- -j8
           cd build/libshaderc
           cp libshaderc_shared.so libshaderc.so
