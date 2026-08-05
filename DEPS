@@ -4,10 +4,11 @@ vars = {
   'abseil_git':  'https://github.com/abseil',
   'google_git':  'https://github.com/google',
   'khronos_git': 'https://github.com/KhronosGroup',
+  'aaaapai_git': 'https://github.com/aaaapai',
 
   'abseil_revision': 'dbf88f932096c7f7714356e919f04749eb87c3e9',
   'effcee_revision': '910ed15722d5d05c9d71ecf36c1a22243cb79b02',
-  'glslang_revision': 'b8a8b3ed509bae703a3d0144176d3dbafb17b033',
+  'glslang_revision': '865562917f22493771058049ade3adb2c92a3c27',
   'googletest_revision': '52eb8108c5bdec04579160ae17225d66034bd723',
   're2_revision': '927f5d53caf8111721e734cf24724686bb745f55',
   'spirv_headers_revision': '4015a331f5ffd6fc5c6fa7b03e08fb4a692491d7',
@@ -23,7 +24,7 @@ deps = {
   'third_party/googletest': Var('google_git') + '/googletest.git@' +
       Var('googletest_revision'),
 
-  'third_party/glslang': Var('khronos_git') + '/glslang.git@' +
+  'third_party/glslang': Var('aaaapai_git') + '/glslang.git@' +
       Var('glslang_revision'),
 
   'third_party/re2': Var('google_git') + '/re2.git@' +
