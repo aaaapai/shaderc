@@ -24,7 +24,7 @@ deps = {
   'third_party/googletest': Var('google_git') + '/googletest.git@' +
       Var('googletest_revision'),
 
-  'third_party/glslang': Var('aaaapai_git') + '/glslang.git@' +
+  'third_party/glslang': Var('google_git') + '/glslang.git@' +
       Var('glslang_revision'),
 
   'third_party/re2': Var('google_git') + '/re2.git@' +
